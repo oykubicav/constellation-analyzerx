@@ -1,0 +1,10 @@
+streamlit
+opencv-python
+ultralytics
+numpy
+Pillow
+python-dotenv
+langchain
+transformers
+torch
+sentence-transformers
