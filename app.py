@@ -4,8 +4,8 @@ from PIL import Image, ImageOps
 from dotenv import load_dotenv
 from ultralytics import YOLO
 
+from langchain_community.vectorstores import FAISS
 
-from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.schema import Document
 from langchain.llms import HuggingFacePipeline
