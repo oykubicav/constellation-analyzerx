@@ -13,6 +13,7 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from transformers import pipeline
 from langchain.llms import HuggingFacePipeline
+from langchain_community.embeddings.huggingface import HuggingFaceEmbeddings
 
 
 
@@ -20,16 +21,16 @@ from langchain.llms import HuggingFacePipeline
 
 
 
-st.title("Constellation Analyzer)")
+st.title("Constellation Analyzer")
 
 CLASS_LIST = [
     'aquila','bootes','canis_major','canis_minor','cassiopeia','cygnus',
     'gemini','leo','lyra','moon','orion','pleiades','sagittarius',
     'scorpius','taurus','ursa_major'
 ]
-# ---- Embedding & LLM ----
 embedding_model = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/paraphrase-MiniLM-L3-v2"
+    model_name="sentence-transformers/paraphrase-MiniLM-L3-v2",
+    model_kwargs={"device": "cpu"}  # bazı ortamlarda işe yarayabilir
 )
 
 
