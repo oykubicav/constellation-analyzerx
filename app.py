@@ -8,7 +8,9 @@ from langchain_community.vectorstores import FAISS
 
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.embeddings import HuggingFaceInferenceAPIEmbeddings
+from langchain_community.llms import HuggingFaceInferenceAPI
 from langchain.llms import HuggingFaceEndpoint
+from langchain_community.llms import HuggingFaceEndpoint
 from langchain.schema import Document
 from langchain.llms import HuggingFacePipeline
 from langchain.prompts import PromptTemplate
@@ -39,10 +41,9 @@ embedding_model = HuggingFaceInferenceAPIEmbeddings(
 )
 
 
-llm = HuggingFaceEndpoint(
-    repo_id="google/flan-t5-small",  # hızlı ve ücretsiz
-    task="text2text-generation",
-    huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_API_TOKEN")
+llm = HuggingFaceInferenceAPI(
+    model_name="google/flan-t5-small",
+    api_key=HF_TOKEN
 )
 
 
