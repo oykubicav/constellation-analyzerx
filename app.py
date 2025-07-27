@@ -7,18 +7,23 @@ from ultralytics import YOLO
 from langchain_community.vectorstores import FAISS
 
 from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.embeddings import HuggingFaceInferenceAPIEmbeddings
+from langchain.llms import HuggingFaceEndpoint
 from langchain.schema import Document
 from langchain.llms import HuggingFacePipeline
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from transformers import pipeline
+from langchain.vectorstores import FAISS
+from langchain_core.documents import Document
+from dotenv import load_dotenv
 from langchain.llms import HuggingFacePipeline
 
 
+load_dotenv() 
 
 
-
-
+HF_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN") or "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"
 
 st.title("Constellation Analyzer")
 
@@ -28,20 +33,17 @@ CLASS_LIST = [
     'scorpius','taurus','ursa_major'
 ]
 # ---- Embedding & LLM ----
-embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-
-
-hf_pipe = pipeline(
-    "text2text-generation",
-    model="google/flan-t5-base",
-    max_new_tokens=256,
-    do_sample=False,
-    no_repeat_ngram_size=6,
-    repetition_penalty=1.2,
-    early_stopping=True
+embedding_model = HuggingFaceInferenceAPIEmbeddings(
+    api_key=HF_TOKEN,
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
 
-llm = HuggingFacePipeline(pipeline=hf_pipe)
+
+llm = HuggingFaceEndpoint(
+    repo_id="google/flan-t5-small",  # hızlı ve ücretsiz
+    task="text2text-generation",
+    huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_API_TOKEN")
+)
 
 
 # ---- YOLO ----
