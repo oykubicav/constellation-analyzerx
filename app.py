@@ -28,7 +28,10 @@ CLASS_LIST = [
     'scorpius','taurus','ursa_major'
 ]
 # ---- Embedding & LLM ----
-embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+embedding_model = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/paraphrase-MiniLM-L3-v2"
+)
+
 
 hf_pipe = pipeline(
     "text2text-generation",
