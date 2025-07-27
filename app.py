@@ -7,25 +7,18 @@ from ultralytics import YOLO
 from langchain_community.vectorstores import FAISS
 
 from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.embeddings import HuggingFaceInferenceAPIEmbeddings
-from langchain_community.llms import HuggingFaceInferenceAPI
-from langchain.llms import HuggingFaceEndpoint
-from langchain_community.llms import HuggingFaceEndpoint
 from langchain.schema import Document
 from langchain.llms import HuggingFacePipeline
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from transformers import pipeline
-from langchain.vectorstores import FAISS
-from langchain_core.documents import Document
-from dotenv import load_dotenv
 from langchain.llms import HuggingFacePipeline
 
 
-load_dotenv() 
 
 
-HF_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN") or "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"
+
+
 
 st.title("Constellation Analyzer")
 
@@ -35,16 +28,20 @@ CLASS_LIST = [
     'scorpius','taurus','ursa_major'
 ]
 # ---- Embedding & LLM ----
-embedding_model = HuggingFaceInferenceAPIEmbeddings(
-    api_key=HF_TOKEN,
-    model_name="sentence-transformers/all-MiniLM-L6-v2"
-)
+embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
 
-llm = HuggingFaceInferenceAPI(
-    model_name="google/flan-t5-small",
-    api_key=HF_TOKEN
+hf_pipe = pipeline(
+    "text2text-generation",
+    model="google/flan-t5-base",
+    max_new_tokens=256,
+    do_sample=False,
+    no_repeat_ngram_size=6,
+    repetition_penalty=1.2,
+    early_stopping=True
 )
+
+llm = HuggingFacePipeline(pipeline=hf_pipe)
 
 
 # ---- YOLO ----
@@ -188,15 +185,4 @@ if query:
         docs = st.session_state.vectorstore.as_retriever(search_kwargs={"k":5}).get_relevant_documents(query)
         context = "\n".join(d.page_content for d in docs)
 
-        if not context.strip() or context.strip().startswith("No constellation"):
-            st.warning("Context empty. Run detection or thresholds may be too strict.")
-        else:
-            # 2) Promptu üret
-            prompt = prompt_tmpl.format(context=context, question=query)
-            # 3) LLM çağır
-            raw_answer = llm.invoke(prompt)  # .invoke LangChain 0.2, .predict eski versiyon
-            
-            answer = re.sub(r'(?i)^\s*answer\s*:?\s*', '', raw_answer).strip()
-
-            st.markdown("### 💡 Answer")
-            st.write(answer)
+ 
