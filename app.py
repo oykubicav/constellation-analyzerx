@@ -13,7 +13,6 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from transformers import pipeline
 from langchain.llms import HuggingFacePipeline
-from langchain_community.embeddings.huggingface import HuggingFaceEmbeddings
 
 
 
@@ -28,10 +27,8 @@ CLASS_LIST = [
     'gemini','leo','lyra','moon','orion','pleiades','sagittarius',
     'scorpius','taurus','ursa_major'
 ]
-embedding_model = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/paraphrase-MiniLM-L3-v2",
-    model_kwargs={"device": "cpu"}  # bazı ortamlarda işe yarayabilir
-)
+# ---- Embedding & LLM ----
+embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
 
 hf_pipe = pipeline(
