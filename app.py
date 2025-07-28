@@ -187,5 +187,14 @@ if query:
         # 1) Docları çek
         docs = st.session_state.vectorstore.as_retriever(search_kwargs={"k":5}).get_relevant_documents(query)
         context = "\n".join(d.page_content for d in docs)
-
+        chain = RetrievalQA.from_chain_type(
+            llm=llm
+            retriever=st.session_state.retriever,
+            chain_type="stuff",
+            return_source_documents=False,
+            chain_type_kwargs={"prompt: prompt_tmpl}
+                               )
+        answer = chain.run(query)
+        st.write("Answer")
+        st.markdown(answer)
  
