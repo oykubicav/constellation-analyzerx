@@ -192,7 +192,7 @@ if query:
             retriever=st.session_state.retriever,
             chain_type="stuff",
             return_source_documents=False,
-            chain_type_kwargs={"prompt: prompt_tmpl}
+            chain_type_kwargs={"prompt": prompt_tmpl}
                                )
         answer = chain.run(query)
         st.write("Answer")
